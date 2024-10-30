@@ -81,10 +81,12 @@ class TriviaServiceTest {
     }
 
     @Test
-    void testReplyToTrivia_noTriviaFound() {
-        when(triviaRepository.findById(anyLong())).thenReturn(Optional.empty());
+void testReplyToTrivia_noTriviaFound() {
+    when(triviaRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        String response = triviaService.replyToTrivia(1L, "Answer");
-        assertEquals("No such question!", response);
-    }
+    Exception exception = assertThrows(RuntimeException.class, () -> {
+        triviaService.replyToTrivia(1L, "Answer");
+    });
+    assertEquals("No such question!", exception.getMessage());
+}
 }

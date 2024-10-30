@@ -10,52 +10,55 @@
         <java.version>11</java.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <junit.jupiter.version>5.8.2</junit.jupiter.version>
+        <surefire.plugin.version>3.0.0-M5</surefire.plugin.version>
     </properties>
 
     <dependencies>
-        <!-- Spring Boot Starter Web for REST APIs and Web features -->
+        <!-- Spring Boot dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>2.6.2</version>
         </dependency>
-
-        <!-- Spring Boot Starter Data JPA for Database access -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>2.6.2</version>
         </dependency>
 
-        <!-- H2 Database for in-memory testing (optional) -->
+        <!-- Database for testing -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.200</version> 
+            <version>1.4.200</version>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Spring Boot Starter Test (JUnit 5) for testing -->
+        <!-- Testing dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <version>2.6.2</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- JUnit Jupiter API for unit testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.7.0</version>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <version>2.6.2</version>
-            <scope>runtime</scope>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.12.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>3.12.4</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -69,6 +72,22 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.plugin.version}</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.6.2</version>
             </plugin>
         </plugins>
     </build>

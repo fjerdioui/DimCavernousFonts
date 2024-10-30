@@ -1,5 +1,3 @@
-package com.trivia.controller;
-
 import com.trivia.entity.Trivia;
 import com.trivia.service.TriviaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/trivia")
@@ -20,10 +17,20 @@ public class TriviaController {
     @PostMapping("/start")
     public ResponseEntity<Map<String, Object>> startTrivia() {
         Trivia trivia = triviaService.startTrivia();
+
+        // Fetch incorrect answers from the API call
+        Map<String, Object> triviaData = triviaService.fetchTriviaFromApi();
+        Map<String, Object> results = (Map<String, Object>) ((List<?>) triviaData.get("results")).get(0);
+        List<String> incorrectAnswers = (List<String>) results.get("incorrect_answers");
+
+        List<String> possibleAnswers = triviaService.getPossibleAnswers(trivia.getCorrectAnswer(), incorrectAnswers);
+
+        // Create response body
         Map<String, Object> response = new HashMap<>();
         response.put("triviaId", trivia.getTriviaId());
         response.put("question", trivia.getQuestion());
-        response.put("possibleAnswers", new String[]{trivia.getCorrectAnswer(), "Dummy Answer 1", "Dummy Answer 2"});
+        response.put("possibleAnswers", possibleAnswers);
+        
         return ResponseEntity.ok(response);
     }
 
@@ -35,9 +42,20 @@ public class TriviaController {
         Map<String, Object> response = new HashMap<>();
         response.put("result", result);
 
-        HttpStatus status = "right!".equals(result) ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
-        if ("Max attempts reached!".equals(result)) {
-            status = HttpStatus.FORBIDDEN;
+        HttpStatus status;
+        switch (result) {
+            case "right!":
+                status = HttpStatus.OK;
+                break;
+            case "wrong!":
+                status = HttpStatus.BAD_REQUEST;
+                break;
+            case "Max attempts reached!":
+                status = HttpStatus.FORBIDDEN;
+                break;
+            default:
+                status = HttpStatus.NOT_FOUND;
+                break;
         }
 
         return new ResponseEntity<>(response, status);
