@@ -1,0 +1,9 @@
+/home/runner/DimCavernousFonts/src/main/java/com/trivia/utils/TriviaUtils.java
+/home/runner/DimCavernousFonts/src/main/java/com/trivia/dto/TriviaResponseDto.java
+/home/runner/DimCavernousFonts/src/main/java/com/trivia/exception/ResourceNotFoundException.java
+/home/runner/DimCavernousFonts/src/main/java/com/trivia/entity/Trivia.java
+/home/runner/DimCavernousFonts/src/main/java/com/trivia/TriviaApiApplication.java
+/home/runner/DimCavernousFonts/src/main/java/com/trivia/controller/TriviaController.java
+/home/runner/DimCavernousFonts/src/main/java/com/trivia/repository/TriviaRepository.java
+/home/runner/DimCavernousFonts/src/main/java/com/trivia/exception/GlobalExceptionHandler.java
+/home/runner/DimCavernousFonts/src/main/java/com/trivia/service/TriviaService.java
