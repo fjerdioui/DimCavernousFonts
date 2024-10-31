@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.trivia.service.TriviaServiceTest
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.08 s -- in com.trivia.service.TriviaServiceTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.72 s -- in com.trivia.service.TriviaServiceTest

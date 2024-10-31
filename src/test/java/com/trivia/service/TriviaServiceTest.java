@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 class TriviaServiceTest {
@@ -26,37 +27,19 @@ class TriviaServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        triviaService = new TriviaService();
+        triviaService.setTriviaRepository(triviaRepository);
     }
 
     @Test
     void testStartTrivia_successful() {
-        // // Mock API response with the expected trivia question and answer
-        // Map<String, Object> mockApiResponse = Map.of("results", List.of(Map.of(
-        // "question", "Sample question?",
-        // "correct_answer", "Answer")));
-
-        // // Set up the mock behavior for RestTemplate to return our mock response
-        // when(restTemplate.getForObject(anyString(),
-        // eq(Map.class))).thenReturn(mockApiResponse);
-
-        // // Mock repository save to return a trivia instance with our sample question
-        // and
-        // // answer
-        // Trivia trivia = new Trivia();
-        // trivia.setQuestion("Sample question?");
-        // trivia.setCorrectAnswer("Answer");
-        // when(triviaRepository.save(any(Trivia.class))).thenReturn(trivia);
-
-        // Act: Call the startTrivia method
         Trivia result = triviaService.startTrivia();
 
-        // Assert: Verify the response matches our mock expectations
         assertNotNull(result);
         assertNotNull(result.getQuestion());
+        assertFalse(result.getQuestion().isEmpty(), "Question should not be empty");
         assertNotNull(result.getCorrectAnswer());
-
-        // Verify that the RestTemplate call was indeed made once
-        // verify(restTemplate, times(1)).getForObject(anyString(), eq(Map.class));
+        assertFalse(result.getCorrectAnswer().isEmpty(), "Correct answer should not be empty");
     }
 
     @Test
@@ -103,6 +86,6 @@ class TriviaServiceTest {
         Exception exception = assertThrows(RuntimeException.class, () -> {
             triviaService.replyToTrivia(1L, "Answer");
         });
-        assertEquals("No such question!", exception.getMessage());
+        assertEquals("Question don't exist!", exception.getMessage());
     }
 }

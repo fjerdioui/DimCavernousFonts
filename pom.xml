@@ -12,35 +12,27 @@
     </properties>
 
     <dependencies>
-    <!-- Spring Boot Starter for Web -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
         <version>${spring-boot.version}</version>
     </dependency>
-
-    <!-- Spring Boot Starter for Data JPA -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-data-jpa</artifactId>
         <version>${spring-boot.version}</version>
     </dependency>
-
     <dependency>
         <groupId>jakarta.persistence</groupId>
         <artifactId>jakarta.persistence-api</artifactId>
         <version>3.1.0</version>
     </dependency>
-    
-    <!-- H2 Database for testing -->
     <dependency>
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>2.1.214</version>
         <scope>runtime</scope>
     </dependency>
-
-    <!-- Spring Boot Starter for Testing -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
@@ -51,7 +43,6 @@
 
     <build>
         <plugins>
-            <!-- Compiler Plugin to use the Java version specified -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -61,7 +52,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Spring Boot Maven Plugin for Building and Running -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

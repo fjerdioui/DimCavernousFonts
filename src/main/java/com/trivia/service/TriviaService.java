@@ -86,4 +86,9 @@ public class TriviaService {
             return "wrong!";
         }
     }
+
+    // needed for the tests
+    public void setTriviaRepository(TriviaRepository triviaRepository) {
+        this.triviaRepository = triviaRepository;
+    }
 }
