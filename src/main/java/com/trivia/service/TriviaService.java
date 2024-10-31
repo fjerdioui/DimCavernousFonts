@@ -18,20 +18,20 @@ public class TriviaService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String triviaApiUrl = "https://opentdb.com/api.php?amount=1";
     private static final int MAX_RETRIES = 3;
-    private static final int RETRY_DELAY_MS = 2000; // 2 seconds
+    private static final int RETRY_DELAY_MS = 2000;
 
     public Trivia startTrivia() {
         Map<String, Object> triviaData = fetchTriviaFromApiWithRetry();
         @SuppressWarnings("unchecked")
         Map<String, Object> results = (Map<String, Object>) ((List<?>) triviaData.get("results")).get(0);
 
-        // Create new Trivia object with correct question and answer data
+        // Create new Trivia object
         Trivia trivia = new Trivia();
         trivia.setQuestion((String) results.get("question"));
         trivia.setCorrectAnswer((String) results.get("correct_answer"));
         trivia.setAnswerAttempts(0);
 
-        // Save the trivia question to the database
+        // Save to the database
         triviaRepository.save(trivia);
 
         return trivia;
@@ -39,26 +39,28 @@ public class TriviaService {
 
     @SuppressWarnings("unchecked")
     public Map<String, Object> fetchTriviaFromApiWithRetry() {
+        // after getting from third party result : "429 Too Many Requests:
+        // \"{\"response_code\":5,\"result\":[]}\""
+        // we try after waiting 2sec to avoid the issue
         for (int attempt = 0; attempt < MAX_RETRIES; attempt++) {
             try {
                 return restTemplate.getForObject(triviaApiUrl, Map.class);
             } catch (HttpClientErrorException.TooManyRequests e) {
                 if (attempt == MAX_RETRIES - 1) {
-                    throw new RuntimeException("Trivia API rate limit reached. Try again later.");
+                    throw new RuntimeException("Trivia API responding with 429");
                 }
                 try {
                     Thread.sleep(RETRY_DELAY_MS);
                 } catch (InterruptedException interruptedException) {
                     Thread.currentThread().interrupt();
-                    throw new RuntimeException("Interrupted during API retry delay", interruptedException);
+                    throw new RuntimeException("Error", interruptedException);
                 }
             }
         }
-        throw new RuntimeException("Failed to fetch trivia question after retries");
+        throw new RuntimeException("Still getting error after " + MAX_RETRIES + " retries");
     }
 
     public List<String> getPossibleAnswers(String correctAnswer, List<String> incorrectAnswers) {
-        // Combine answers and shuffle them
         List<String> possibleAnswers = new ArrayList<>(incorrectAnswers);
         possibleAnswers.add(correctAnswer);
         Collections.shuffle(possibleAnswers);
@@ -66,22 +68,19 @@ public class TriviaService {
     }
 
     public String replyToTrivia(Long triviaId, String answer) {
-        // Retrieve the trivia question by ID
         Trivia trivia = triviaRepository.findById(triviaId)
-                .orElseThrow(() -> new RuntimeException("No such question!"));
+                .orElseThrow(() -> new RuntimeException("Question don't exist!"));
 
-        // Check if maximum attempts have been reached
         if (trivia.getAnswerAttempts() >= 3) {
             return "Max attempts reached!";
         }
 
-        // Check if the provided answer is correct
         if (trivia.getCorrectAnswer().equalsIgnoreCase(answer)) {
-            // Correct answer, remove trivia from the database
+            // correct answer
             triviaRepository.delete(trivia);
             return "right!";
         } else {
-            // Incorrect answer, increment attempt count
+            // incorrect answer
             trivia.setAnswerAttempts(trivia.getAnswerAttempts() + 1);
             triviaRepository.save(trivia);
             return "wrong!";

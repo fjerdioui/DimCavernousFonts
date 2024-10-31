@@ -15,7 +15,6 @@ public class Trivia {
     private String correctAnswer;
     private int answerAttempts = 0;
 
-    // Getters and Setters
     public Long getTriviaId() {
         return triviaId;
     }

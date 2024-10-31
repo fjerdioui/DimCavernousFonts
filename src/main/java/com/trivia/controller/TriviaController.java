@@ -20,7 +20,7 @@ public class TriviaController {
     public ResponseEntity<Map<String, Object>> startTrivia() {
         Trivia trivia = triviaService.startTrivia();
 
-        // Fetch incorrect answers from the API call
+        // Fetch information from 3rd party API
         Map<String, Object> triviaData = triviaService.fetchTriviaFromApiWithRetry();
         @SuppressWarnings("unchecked")
         Map<String, Object> results = (Map<String, Object>) ((List<?>) triviaData.get("results")).get(0);
@@ -29,7 +29,7 @@ public class TriviaController {
 
         List<String> possibleAnswers = triviaService.getPossibleAnswers(trivia.getCorrectAnswer(), incorrectAnswers);
 
-        // Create response body
+        // Create response
         Map<String, Object> response = new HashMap<>();
         response.put("triviaId", trivia.getTriviaId());
         response.put("question", trivia.getQuestion());
