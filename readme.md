@@ -9,11 +9,8 @@ Maven
 
 Clone the Repository:
 
-bash
-Copy code
 git clone https://github.com/fjerdioui/TriviaAPI.git
 cd trivia-api
-Build and Run the Application:
 
 Build:
 mvn clean install
