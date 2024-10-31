@@ -1,6 +1,5 @@
-TriviaController.class
-com/trivia/service/TriviaService.class
-com/trivia/TriviaApiApplication.class
-com/trivia/exception/GlobalExceptionHandler.class
-com/trivia/entity/Trivia.class
-com/trivia/repository/TriviaRepository.class
+com\trivia\repository\TriviaRepository.class
+com\trivia\entity\Trivia.class
+com\trivia\exception\GlobalExceptionHandler.class
+com\trivia\TriviaApiApplication.class
+com\trivia\service\TriviaService.class

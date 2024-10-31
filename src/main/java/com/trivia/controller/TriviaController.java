@@ -1,3 +1,5 @@
+package com.trivia.controller;
+
 import com.trivia.entity.Trivia;
 import com.trivia.service.TriviaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,10 @@ public class TriviaController {
         Trivia trivia = triviaService.startTrivia();
 
         // Fetch incorrect answers from the API call
-        Map<String, Object> triviaData = triviaService.fetchTriviaFromApi();
+        Map<String, Object> triviaData = triviaService.fetchTriviaFromApiWithRetry();
+        @SuppressWarnings("unchecked")
         Map<String, Object> results = (Map<String, Object>) ((List<?>) triviaData.get("results")).get(0);
+        @SuppressWarnings("unchecked")
         List<String> incorrectAnswers = (List<String>) results.get("incorrect_answers");
 
         List<String> possibleAnswers = triviaService.getPossibleAnswers(trivia.getCorrectAnswer(), incorrectAnswers);
@@ -30,12 +34,13 @@ public class TriviaController {
         response.put("triviaId", trivia.getTriviaId());
         response.put("question", trivia.getQuestion());
         response.put("possibleAnswers", possibleAnswers);
-        
+
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/reply/{triviaId}")
-    public ResponseEntity<Map<String, Object>> replyToTrivia(@PathVariable Long triviaId, @RequestBody Map<String, String> answerMap) {
+    public ResponseEntity<Map<String, Object>> replyToTrivia(@PathVariable Long triviaId,
+            @RequestBody Map<String, String> answerMap) {
         String answer = answerMap.get("answer");
         String result = triviaService.replyToTrivia(triviaId, answer);
 
