@@ -1,6 +1,7 @@
 package com.trivia.service;
 
 import com.trivia.entity.Trivia;
+import com.trivia.exception.QuestionNotFoundException;
 import com.trivia.repository.TriviaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class TriviaService {
     private static final int RETRY_DELAY_MS = 2000;
 
     public Trivia startTrivia() {
-        Map<String, Object> triviaData = fetchTriviaFromApiWithRetry();
+        Map<String, Object> triviaData = fetchTrivia();
         @SuppressWarnings("unchecked")
         Map<String, Object> results = (Map<String, Object>) ((List<?>) triviaData.get("results")).get(0);
 
@@ -38,7 +39,7 @@ public class TriviaService {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, Object> fetchTriviaFromApiWithRetry() {
+    public Map<String, Object> fetchTrivia() {
         // after getting from third party result : "429 Too Many Requests:
         // \"{\"response_code\":5,\"result\":[]}\""
         // we try after waiting 2sec to avoid the issue
@@ -60,16 +61,9 @@ public class TriviaService {
         throw new RuntimeException("Still getting error after " + MAX_RETRIES + " retries");
     }
 
-    public List<String> getPossibleAnswers(String correctAnswer, List<String> incorrectAnswers) {
-        List<String> possibleAnswers = new ArrayList<>(incorrectAnswers);
-        possibleAnswers.add(correctAnswer);
-        Collections.shuffle(possibleAnswers);
-        return possibleAnswers;
-    }
-
     public String replyToTrivia(Long triviaId, String answer) {
         Trivia trivia = triviaRepository.findById(triviaId)
-                .orElseThrow(() -> new RuntimeException("Question don't exist!"));
+                .orElseThrow(() -> new QuestionNotFoundException());
 
         if (trivia.getAnswerAttempts() >= 3) {
             return "Max attempts reached!";

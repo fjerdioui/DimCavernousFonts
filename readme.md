@@ -10,6 +10,8 @@ Maven
 Clone the Repository:
 
 git clone https://github.com/fjerdioui/TriviaAPI.git
+
+Access project:
 cd trivia-api
 
 Build:

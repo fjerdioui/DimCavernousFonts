@@ -2,4 +2,5 @@ com\trivia\repository\TriviaRepository.class
 com\trivia\controller\TriviaController.class
 com\trivia\entity\Trivia.class
 com\trivia\TriviaApiApplication.class
+com\trivia\exception\QuestionNotFoundException.class
 com\trivia\service\TriviaService.class

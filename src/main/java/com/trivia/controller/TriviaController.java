@@ -21,19 +21,19 @@ public class TriviaController {
         Trivia trivia = triviaService.startTrivia();
 
         // Fetch information from 3rd party API
-        Map<String, Object> triviaData = triviaService.fetchTriviaFromApiWithRetry();
+        Map<String, Object> triviaData = triviaService.fetchTrivia();
         @SuppressWarnings("unchecked")
         Map<String, Object> results = (Map<String, Object>) ((List<?>) triviaData.get("results")).get(0);
         @SuppressWarnings("unchecked")
-        List<String> incorrectAnswers = (List<String>) results.get("incorrect_answers");
+        List<String> answers = (List<String>) results.get("incorrect_answers");
 
-        List<String> possibleAnswers = triviaService.getPossibleAnswers(trivia.getCorrectAnswer(), incorrectAnswers);
+        answers.add(trivia.getCorrectAnswer());
 
         // Create response
         Map<String, Object> response = new HashMap<>();
         response.put("triviaId", trivia.getTriviaId());
         response.put("question", trivia.getQuestion());
-        response.put("possibleAnswers", possibleAnswers);
+        response.put("possibleAnswers", answers);
 
         return ResponseEntity.ok(response);
     }
